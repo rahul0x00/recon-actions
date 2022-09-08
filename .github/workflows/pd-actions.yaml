@@ -183,7 +183,6 @@ jobs:
           git add output/aquatone/*
 <<<<<<< HEAD
           git add output/gostare
-=======
           git add output/gostare/*
 >>>>>>> 61a8ddc91850a8b762c3192e2b411123417f6b9d
           git add output/parameters.txt
