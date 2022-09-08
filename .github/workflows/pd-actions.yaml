@@ -193,8 +193,8 @@ jobs:
       - name: Commit results to Github
         run: |
           git fetch
-          git config --local user.email "ritzyrahul9@gmail.com"
-          git config --global user.name "5HAD0W-P1R4T3"
+          git config --local user.email "rahul0x01@protonmail.com"
+          git config --global user.name "0xrahul6"
           git commit -m "PD-Actions report" -a --allow-empty
 
       - name: Push changes
