@@ -98,7 +98,7 @@ jobs:
 
       - name: Running naabu to check top 100 ports
         run: |
-          naabu -iL output/active_subdomains.txt  -rate 10000 -top-ports 100 | tee output/active_ports.txt
+          naabu -l output/active_subdomains.txt  -rate 10000 -top-ports 100 | tee output/active_ports.txt
         shell: bash
 
       #      For running vulnerability assessment of cloud assets.
