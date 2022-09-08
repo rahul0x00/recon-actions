@@ -1,0 +1,204 @@
+name: pd-actions
+
+on:
+  #schedule:
+  #  - cron: "49 * * * *"
+  # Remove both comments to run this action on daily basis.
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+
+      - name: Setup golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+
+      - name: Setup Dependencies
+        run: |
+          sudo apt-get install libpcap-dev # Required for Naabu
+          sudo apt-get install coreutils
+      - name: Setup chromium & aquatone
+        env:
+          GO111MODULE: on
+        run: |
+          sudo apt-get -y install unzip # Required for aquatone
+          git clone https://github.com/scheib/chromium-latest-linux.git
+          cd chromium-latest-linux
+          ./update-and-run.sh
+          sudo apt install -y ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils
+          go get -u github.com/shelld3v/aquatone
+        shell: bash
+
+      - name: Cache Go
+        id: cache-go
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/go
+          key: ${{ runner.os }}-go
+
+      - name: Setting up ProjectDiscovery tools
+        if: steps.cache-go.outputs.cache-hit != 'true'
+        env:
+          GO111MODULE: on
+        run: |
+          go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+          go get -v github.com/projectdiscovery/dnsx/cmd/dnsx
+          go get -v github.com/projectdiscovery/naabu/v2/cmd/naabu
+          go get -v github.com/projectdiscovery/httpx/cmd/httpx
+          go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
+          go get -v github.com/projectdiscovery/notify/cmd/notify
+          go get -v github.com/lc/gau
+          go get -u github.com/tomnomnom/assetfinder
+          go get -v github.com/dwisiswant0/go-stare
+          go get -v github.com/haccer/subjack
+          
+        shell: bash 
+
+      - name: Running SubFinder for passive DNS enumeration
+        run: |
+          subfinder -dL input/domains.txt -config config/subfinder-config.yaml -o output/passive_subdomains.txt
+        shell: bash
+
+      - name: Running Assetfinder for getting more subdomains
+        run: |
+          cat input/domains.txt | while read line ; do assetfinder --subs-only $line >> output/passive_subdomains.txt;done  
+        shell: bash
+      - name: Running findomain for finding more subdomains
+        run: |
+          wget https://github.com/findomain/findomain/releases/latest/download/findomain-linux
+          chmod +x findomain-linux
+          sudo ./findomain-linux -f input/domains.txt -u findomain.txt  
+          cat findomain.txt | sort -u >> output/passive_subdomains.txt 
+      
+#       - name: Running amass for gathering more subdomains
+#         run : |
+#           sudo snap install amass
+#           amass enum -df input/domains.txt -o amass.txt
+#           cat amass.txt | sort -u output/passive_subdomains.txt
+      - name: Running gau for finding more subdomains
+        run: |
+          cat input/domains.txt | gau -b jpg,png,gif,svg,woff2 -subs | cut -d / -f 3 | sort -u >> output/passive_subdomains.txt
+        shell: bash
+
+      - name: Sorting found out subdomains
+        run: |
+          sort -u output/passive_subdomains.txt -o output/passive_subdomains.txt
+        shell: bash
+
+      - name: Running dnsx for valid DNS filtering
+        run: |
+          dnsx -l output/passive_subdomains.txt -t 50 | tee output/active_subdomains.txt
+        shell: bash
+
+      - name: Running naabu to check top 100 ports
+        run: |
+          naabu -iL output/active_subdomains.txt  -rate 10000 -top-ports 100 | tee output/active_ports.txt
+        shell: bash
+
+      #      For running vulnerability assessment of cloud assets.
+      #      - name: Enumerating hosts from Cloud with Cloudlist
+      #        run: |
+      #          cloudlist -config config/cloudlist-config.yaml -ip | tee output/cloud_hosts.txt >> output/active_ports.txt
+      #        shell: bash
+
+      - name: Running httpx for HTTP webservers probbing 
+        run: |
+          httpx -l output/active_ports.txt | tee output/active_urls.txt
+        shell: bash
+
+      - name: Downloading Nuclei Templates
+        run: |
+          nuclei -update-templates
+        shell: bash
+
+      - name: Running Nuclei for vulnerability assessment
+        run: |
+          nuclei -t cves/ -l output/active_urls.txt -bs 100 -c 50 -rl 300 -nc | tee output/nuclei_output.txt
+        shell: bash
+
+      - name: Running aquatone to take screenshots
+        run: |
+          cat output/active_urls.txt | aquatone -scan-timeout 3000 -threads 10 -chrome-path ~/work/pd-actions/pd-actions/chromium-latest-linux/latest/chrome -out output/aquatone
+        shell: bash
+
+      - name: Running Go-stare to take screenshots
+        run: go-stare -t output/active_urls.txt -o output/gostare
+        shell: bash
+
+      - name: Setting up ParamSpider
+        run: |
+          git clone https://github.com/devanshbatham/ParamSpider 
+          pip3 install -r ParamSpider/requirements.txt
+          cat input/domains.txt | while read line;do python3 ParamSpider/paramspider.py -d $line --exclude woff,css,js,png,svg,php,jpg --output parameters.txt --level high;done
+        shell: bash
+
+      # - name: Checking for XSS
+      #   run: |
+      #     cat input/domains.txt | while read line;do python3 paramspider.py -d $line --subs false --placeholder '"/><script>confirm(1)</script>' > optimizely.txt | while read host do ; do curl --silent --path-as-is --insecure "$host" | grep -qs "<script>confirm(1)" && echo "$host \033[0;31mVulnerable\n" || echo "$host \033[0;32mNot Vulnerable\n";done >> output/xss.txt
+      #   shell: bash
+         
+      
+      # - name: Setting up Retire.js
+      #   run: sudo npm install -g retire
+      #   shell: bash
+      
+      #For getting information of vulnderable versions from js_files
+      # - name: Running Retire.js
+      #   run: 
+
+      - name: Checking for Subdomain Takeover
+        run: |
+          subjack -w output/active_urls.txt -c /home/runner/go/pkg/mod/github.com/haccer/subjack@v0.0.0-20201112041112-49c51e57deab/fingerprints.json -t 20 -ssl -v 3 -o output/takeover/subjack.txt 
+        shell: bash
+
+      # - name: Running Subzy for STKO
+      #   run: |
+      #     subzy -targets output/active_urls.txt -hide_fails --verify_ssl -concurrency 20 | tee output/takeover/subzy.txt
+
+       # For posting results to slack/discord/telegram
+      - name: Sending notification to discord
+        run: |
+          mkdir -p $HOME/.config/notify/
+          cp config/notify-config.conf $HOME/.config/notify/notify.conf
+          echo "Scan completed" | notify
+        shell: bash
+
+      - name: Sorting the output results
+        run: |
+          find output -type f -exec sort {} -o {} \;
+        shell: bash
+
+      - name: Create local changes
+        run: |
+          git add output/passive_subdomains.txt
+          git add output/active_subdomains.txt
+          git add output/active_ports.txt
+          git add output/active_urls.txt
+          git add output/nuclei_output.txt
+          git add output/aquatone/*
+<<<<<<< HEAD
+          git add output/gostare
+=======
+          git add output/gostare/*
+>>>>>>> 61a8ddc91850a8b762c3192e2b411123417f6b9d
+          git add output/parameters.txt
+          git add output/takeover/*
+          
+      #          git add output/cloud_hosts.txt
+      - name: Commit results to Github
+        run: |
+          git fetch
+          git config --local user.email "ritzyrahul9@gmail.com"
+          git config --global user.name "5HAD0W-P1R4T3"
+          git commit -m "PD-Actions report" -a --allow-empty
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
