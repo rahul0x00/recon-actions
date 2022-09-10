@@ -163,9 +163,9 @@ jobs:
           subjack -w output/active_urls.txt -c /home/runner/go/pkg/mod/github.com/haccer/subjack@v0.0.0-20201112041112-49c51e57deab/fingerprints.json -t 20 -ssl -v 3 -o output/takeover/subjack.txt 
         shell: bash
 
-      - name: Running Subzy for STKO
-        run: |
-          subzy -targets output/active_urls.txt -hide_fails --verify_ssl -concurrency 20 | tee output/takeover/subzy.txt
+#      - name: Running Subzy for STKO
+#        run: |
+#          subzy -targets output/active_urls.txt -hide_fails --verify_ssl -concurrency 20 | tee output/takeover/subzy.txt
 
        # For posting results to slack/discord/telegram
 #       - name: Sending notification to discord
