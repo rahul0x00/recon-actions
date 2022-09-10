@@ -144,10 +144,10 @@ jobs:
           cat input/domains.txt | while read line;do python3 ParamSpider/paramspider.py -d $line --exclude woff,css,js,png,svg,php,jpg --output parameters.txt --level high;done
         shell: bash
 
-      - name: Checking for XSS
-        run: |
-          cat input/domains.txt | while read line;do python3 paramspider.py -d $line --subs false --placeholder '"/><script>confirm(1)</script>' > optimizely.txt | while read host do ; do curl --silent --path-as-is --insecure "$host" | grep -qs "<script>confirm(1)" && echo "$host \033[0;31mVulnerable\n" || echo "$host \033[0;32mNot Vulnerable\n";done >> output/xss.txt
-        shell: bash
+#       - name: Checking for XSS
+#         run: |
+#           cat input/domains.txt | while read line;do python3 paramspider.py -d $line --subs false --placeholder '"/><script>confirm(1)</script>' > optimizely.txt | while read host do ; do curl --silent --path-as-is --insecure "$host" | grep -qs "<script>confirm(1)" && echo "$host \033[0;31mVulnerable\n" || echo "$host \033[0;32mNot Vulnerable\n";done >> output/xss.txt
+#         shell: bash
          
       
       # - name: Setting up Retire.js
