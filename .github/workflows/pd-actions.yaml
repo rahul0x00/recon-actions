@@ -27,14 +27,12 @@ jobs:
           GO111MODULE: on
         run: |
           sudo apt-get -y install unzip # Required for aquatone
-      #    git clone https://github.com/scheib/chromium-latest-linux.git
-      #    cd chromium-latest-linux
-      #    ./update-and-run.sh
-      #   sudo apt install -y ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils
-      #     go get -u github.com/shelld3v/aquatone
-      #    https://github.com/breenmachine/httpscreenshot.git
-      #    cd httpscreenshot
-      #   sudo ./install-dependencies.sh
+          git clone https://github.com/scheib/chromium-latest-linux.git
+          cd chromium-latest-linux
+          ./update-and-run.sh
+          sudo apt install -y ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils
+          go get -u github.com/shelld3v/aquatone
+       
           
         shell: bash
 
@@ -187,6 +185,7 @@ jobs:
           git add output/active_ports.txt
           git add output/active_urls.txt
           git add output/nuclei_output.txt
+          git add out
           <<<<<<< HEAD
           git add output/gostare
           =======
@@ -194,6 +193,7 @@ jobs:
           >>>>>>> 61a8ddc91850a8b762c3192e2b411123417f6b9d
           git add output/parameters.txt
           git add output/takeover/*
+          git add output/aquatone/
           
       #          git add output/cloud_hosts.txt
       - name: Commit results to Github
