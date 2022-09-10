@@ -187,7 +187,7 @@ jobs:
           git add output/active_ports.txt
           git add output/active_urls.txt
           git add output/nuclei_output.txt
-          git add output/aquatone/*
+#          git add output/aquatone/*
           <<<<<<< HEAD
           git add output/gostare
           =======
