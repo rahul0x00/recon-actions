@@ -185,15 +185,14 @@ jobs:
           git add output/active_ports.txt
           git add output/active_urls.txt
           git add output/nuclei_output.txt
-<<<<<<< 
+<<<<<<< HEAD
 
-HEAD
-          
 =======
           git add output/gostare
           git add output/gostare/*
-    
+         
           >>>>>>> 61a8ddc91850a8b762c3192e2b411123417f6b9d
+
           git add output/parameters.txt
           git add output/takeover/*
           git add output/aquatone/
