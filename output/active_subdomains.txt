@@ -1,5 +1,1 @@
-brand-config.mypinpad.com
-careers.mypinpad.com
-mypinpad.com
-support.mypinpad.com
-www.mypinpad.com
+
