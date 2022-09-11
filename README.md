@@ -19,7 +19,7 @@
 - Execute below commands, make sure to update `USER_NAME` with your GitHub username.
 
 ```bash
-# ▶ git clone --bare https://github.com/LuD1161/pd-actions.git; cd pd-actions.git
+# ▶ git clone --bare https://github.com/0xrahul6/pd-actions.git; cd pd-actions.git
 # ▶ git push --mirror https://github.com/USER_NAME/pd-actions.git
 ```
 
