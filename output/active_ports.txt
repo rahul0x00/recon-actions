@@ -1,0 +1,10 @@
+brand-config.mypinpad.com:443
+brand-config.mypinpad.com:80
+careers.mypinpad.com:443
+careers.mypinpad.com:80
+mypinpad.com:443
+mypinpad.com:80
+support.mypinpad.com:443
+support.mypinpad.com:80
+www.mypinpad.com:443
+www.mypinpad.com:80
