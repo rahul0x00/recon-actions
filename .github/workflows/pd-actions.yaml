@@ -98,10 +98,10 @@ jobs:
           dnsx -l output/passive_subdomains.txt -t 50 | tee output/active_subdomains.txt
         shell: bash
 
-      - name: Running naabu to check top 100 ports
-        run: |
-          naabu -l output/active_subdomains.txt  -rate 10000 -top-ports 100 | tee output/active_ports.txt
-        shell: bash
+#       - name: Running naabu to check top 100 ports
+#         run: |
+#           naabu -l output/active_subdomains.txt  -rate 10000 -top-ports 100 | tee output/active_ports.txt
+#         shell: bash
 
       #      For running vulnerability assessment of cloud assets.
       #      - name: Enumerating hosts from Cloud with Cloudlist
@@ -109,20 +109,20 @@ jobs:
       #          cloudlist -config config/cloudlist-config.yaml -ip | tee output/cloud_hosts.txt >> output/active_ports.txt
       #        shell: bash
 
-      - name: Running httpx for HTTP webservers probbing 
-        run: |
-          httpx -l output/active_ports.txt | tee output/active_urls.txt
-        shell: bash
+#       - name: Running httpx for HTTP webservers probbing 
+#         run: |
+#           httpx -l output/active_ports.txt | tee output/active_urls.txt
+#         shell: bash
 
-      - name: Downloading Nuclei Templates
-        run: |
-          nuclei -update-templates
-        shell: bash
+#       - name: Downloading Nuclei Templates
+#         run: |
+#           nuclei -update-templates
+#         shell: bash
 
-      - name: Running Nuclei for vulnerability assessment
-        run: |
-          nuclei -t cves/ -l output/active_urls.txt -bs 100 -c 50 -rl 300 -nc | tee output/nuclei_output.txt
-        shell: bash
+#       - name: Running Nuclei for vulnerability assessment
+#         run: |
+#           nuclei -t cves/ -l output/active_urls.txt -bs 100 -c 50 -rl 300 -nc | tee output/nuclei_output.txt
+#         shell: bash
 
      # - name: Running httpscreenshot to take screenshots
      #   run: |
