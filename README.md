@@ -1,4 +1,5 @@
-<h1 align="center"> PD Actions </h1>
+<h1 align="center"> Recon Actions </h1>
+<h3>This project is based on pd-action</h3>
 <h4 align="center">Continuous reconnaissance and vulnerability assessment using <a href='https://github.com/features/actions'>GitHub Actions</a></h4>
 
 <p align="center">
@@ -19,7 +20,7 @@
 - Execute below commands, make sure to update `USER_NAME` with your GitHub username.
 
 ```bash
-# ▶ git clone --bare https://github.com/0xrahul6/pd-actions.git; cd pd-actions.git
+# ▶ git clone --bare https://github.com/rahul0x00/recon-actions.git; cd recon-actions.git
 # ▶ git push --mirror https://github.com/USER_NAME/pd-actions.git
 ```
 
