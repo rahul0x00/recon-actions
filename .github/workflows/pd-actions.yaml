@@ -78,11 +78,11 @@ jobs:
           sudo ./findomain -f input/domains.txt -u findomain.txt  
           cat findomain.txt | sort -u >> output/passive_subdomains.txt 
       
-#       - name: Running amass for gathering more subdomains
-#         run : |
-#           sudo snap install amass
-#           amass enum -df input/domains.txt -o amass.txt
-#           cat amass.txt | sort -u output/passive_subdomains.txt
+       - name: Running amass for gathering more subdomains
+         run : |
+           sudo snap install amass
+           amass enum -df input/domains.txt -o amass.txt
+           cat amass.txt | sort -u output/passive_subdomains.txt
       - name: Running gau for finding more subdomains
         run: |
           cat input/domains.txt | gau -b jpg,png,gif,svg,woff2 -subs | cut -d / -f 3 | sort -u >> output/passive_subdomains.txt
@@ -124,12 +124,12 @@ jobs:
           nuclei -t cves/ -l output/active_urls.txt -bs 100 -c 50 -rl 300 -nc | tee output/nuclei_output.txt
         shell: bash
 
-     # - name: Running httpscreenshot to take screenshots
-     #   run: |
-     #     cat output/active_urls.txt | aquatone -scan-timeout 3000 -threads 10 -chrome-path ~/work/pd-actions/pd-actions/chromium-latest-linux/latest/chrome -out output/aquatone
+       - name: Running aquatone to take screenshots
+        run: |
+          cat output/active_urls.txt | aquatone -scan-timeout 3000 -threads 10 -chrome-path ~/work/pd-actions/pd-actions/chromium-latest-linux/latest/chrome -out output/aquatone
      #      cd httpscreenshot
      #      ./httpscreenshot.py -l output/active_urls.txt output/aquatone
-     #   shell: bash
+        shell: bash
 
       - name: Running Go-stare to take screenshots
         run: go-stare -t output/active_urls.txt -o output/gostare
@@ -142,10 +142,10 @@ jobs:
           cat input/domains.txt | while read line;do python3 ParamSpider/paramspider.py -d $line --exclude woff,css,js,png,svg,php,jpg --output parameters.txt --level high;done
         shell: bash
 
-#       - name: Checking for XSS
-#         run: |
-#           cat input/domains.txt | while read line;do python3 paramspider.py -d $line --subs false --placeholder '"/><script>confirm(1)</script>' > optimizely.txt | while read host do ; do curl --silent --path-as-is --insecure "$host" | grep -qs "<script>confirm(1)" && echo "$host \033[0;31mVulnerable\n" || echo "$host \033[0;32mNot Vulnerable\n";done >> output/xss.txt
-#         shell: bash
+       - name: Checking for XSS
+         run: |
+           cat input/domains.txt | while read line;do python3 paramspider.py -d $line --subs false --placeholder '"/><script>confirm(1)</script>' > optimizely.txt | while read host do ; do curl --silent --path-as-is --insecure "$host" | grep -qs "<script>confirm(1)" && echo "$host \033[0;31mVulnerable\n" || echo "$host \033[0;32mNot Vulnerable\n";done >> output/xss.txt
+        shell: bash
          
       
       # - name: Setting up Retire.js
@@ -161,17 +161,17 @@ jobs:
           subjack -w output/active_urls.txt -c /home/runner/go/pkg/mod/github.com/haccer/subjack@v0.0.0-20201112041112-49c51e57deab/fingerprints.json -t 20 -ssl -v 3 -o output/takeover/subjack.txt 
         shell: bash
 
-#      - name: Running Subzy for STKO
-#        run: |
-#          subzy -targets output/active_urls.txt -hide_fails --verify_ssl -concurrency 20 | tee output/takeover/subzy.txt
+      - name: Running Subzy for STKO
+        run: |
+          subzy -targets output/active_urls.txt -hide_fails --verify_ssl -concurrency 20 | tee output/takeover/subzy.txt
 
        # For posting results to slack/discord/telegram
-#       - name: Sending notification to discord
-#         run: |
-#           mkdir -p $HOME/.config/notify/
-#           cp config/notify-config.conf $HOME/.config/notify/notify.conf
-#           echo "Scan completed" | notify
-#         shell: bash
+       - name: Sending notification to discord
+         run: |
+           mkdir -p $HOME/.config/notify/
+           cp config/notify-config.conf $HOME/.config/notify/notify.conf
+           echo "Scan completed" | notify
+         shell: bash
 
       - name: Sorting the output results
         run: |
@@ -188,13 +188,13 @@ jobs:
           git add output/gostare/*
           git add output/takeover/*
           git add output/aquatone/
-#          <<<<<<< HEAD
+          <<<<<<< HEAD
 
-#          =======
-#         git add output/gostare
- #         git add output/gostare/*
+          =======
+         git add output/gostare
+          git add output/gostare/*
          
-#          >>>>>>> 61a8ddc91850a8b762c3192e2b411123417f6b9d
+          >>>>>>> 61a8ddc91850a8b762c3192e2b411123417f6b9d
 
 #           git add output/parameters.txt
 #           git add output/takeover/*
@@ -204,8 +204,8 @@ jobs:
       - name: Commit results to Github
         run: |
           git fetch
-          git config --local user.email "rahul0x01@protonmail.com"
-          git config --global user.name "0xrahul6"
+          git config --local user.email "your-mail"
+          git config --global user.name "username"
           git commit -m "PD-Actions report" -a --allow-empty
 
       - name: Push changes
