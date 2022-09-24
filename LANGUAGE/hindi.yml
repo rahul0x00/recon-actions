@@ -1,111 +1,110 @@
-<h1 align="center"> Recon Actions </h1>
-<h3>This project is based on pd-action</h3>
-<h4 align="center">Continuous reconnaissance and vulnerability assessment using <a href='https://github.com/features/actions'>GitHub Actions</a></h4>
+<h1 align="center"> पुन: क्रियाएँ </h1>
+<h3>यह प्रोजेक्ट pd-action पर आधारित है</h3>
+<h4 align="center"><a href='https://github.com/features/actions'>GitHub Actions</a></h4> का उपयोग करके सतत टोही और भेद्यता मूल्यांकन
 
 <p align="center">
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-_red.svg"></a>
 </p>
 
-# Advantages
+#लाभ
 
-- Free 2000 minutes/month of cloud scans.
-- Fully automated and simple to deploy
-- Continuous scheduled scans & monitoring of assets
-- Integrate any tool of your choice in workflow
-- Native git diff support for change visualization
+- 2000 मिनट/माह का क्लाउड स्कैन निःशुल्क।
+- पूरी तरह से स्वचालित और तैनात करने में आसान
+- निरंतर अनुसूचित स्कैन और संपत्ति की निगरानी
+- वर्कफ़्लो में अपनी पसंद के किसी भी टूल को एकीकृत करें
+- परिवर्तन विज़ुअलाइज़ेशन के लिए मूल git भिन्न समर्थन
 
-# Setup
+# स्थापित करना
 
-- Create a new **private** repository from [here](https://github.com/new) with name `pd-actions`
-- Execute below commands, make sure to update `USER_NAME` with your GitHub username.
+- `pd-actions` नाम से [यहां](https://github.com/new) से एक नया **निजी** रिपॉजिटरी बनाएं
+- नीचे दिए गए आदेशों को निष्पादित करें, अपने GitHub उपयोगकर्ता नाम के साथ `USER_NAME` को अपडेट करना सुनिश्चित करें।
 
-```bash
-# ▶ git clone --bare https://github.com/rahul0x00/recon-actions.git; cd recon-actions.git
-# ▶ git push --mirror https://github.com/USER_NAME/pd-actions.git
+`` `बाश
+# git क्लोन --bare https://github.com/rahul0x00/recon-actions.git; सीडी recon-actions.git
+# git push --mirror https://github.com/USER_NAME/pd-actions.git
 ```
 
-- Update `input/domains.txt` with the target of your interest.
-- Make required changes in `.github/workflows/pd-actions.yaml`
-- Now you will be able to see the "pd-actions" under Actions tab in your repository.
+- अपनी रुचि के लक्ष्य के साथ `input/domains.txt` को अपडेट करें।
+- `.github/workflows/pd-actions.yaml` में आवश्यक परिवर्तन करें
+- अब आप अपने भंडार में क्रियाएँ टैब के अंतर्गत "पीडी-क्रियाएँ" देख सकेंगे।
 
-For running continuous periodic scan, remove the below comments form your actions file.
+निरंतर आवधिक स्कैन चलाने के लिए, नीचे दी गई टिप्पणियों को अपनी क्रिया फ़ाइल से हटा दें।
 
-```yaml
-name: pd-actions
+``` यमल
+नाम: पीडी-क्रियाएं
 
-on:
-  #    schedule:
-  #      - cron: '0 0 * * *'
-  workflow_dispatch:
+पर:
+  #    अनुसूची:
+  # - क्रॉन: '0 0 * * *'
+  वर्कफ़्लो_डिस्पैच:
 ```
 
-As default, **scans are scheduled to run at 12 AM on daily basis**, you can update schedule and flag values of various tools as per your need in <ins>.github/workflows/pd-actions.yaml</ins> file on your forked version.
+डिफ़ॉल्ट रूप से, **स्कैन दैनिक आधार पर 12 बजे चलने के लिए निर्धारित हैं**, आप <ins>.github/workflows/pd-actions.yaml</ins में अपनी आवश्यकता के अनुसार विभिन्न टूल के शेड्यूल और फ़्लैग मानों को अपडेट कर सकते हैं। > अपने फोर्कड संस्करण पर फ़ाइल करें।
 
-<table>
+<तालिका>
 <tr>
-<td>
+<टीडी>
 
-## Config
+## कॉन्फिग
 
-You can configure keys for sources to use in subfinder in `config/subfinder-config.yaml` to get additional results, also `config/bug-tracker-config.yaml` to make use of nuclei bug reporting module, for [more details](https://nuclei.projectdiscovery.io/nuclei/get-started/#nuclei-reporting).
+आप अतिरिक्त परिणाम प्राप्त करने के लिए `config/subfinder-config.yaml` में सबफाइंडर में उपयोग करने के लिए स्रोतों के लिए कुंजियों को कॉन्फ़िगर कर सकते हैं, साथ ही [अधिक विवरण के लिए, नाभिक बग रिपोर्टिंग मॉड्यूल का उपयोग करने के लिए `config/bug-tracker-config.yaml` भी कॉन्फ़िगर कर सकते हैं। ](https://nuclei.projectdiscovery.io/nuclei/get-started/#nuclei-reporting)।
 
-To send output from any project directly to **Slack, Discord, Telegram**, add/update notify flags in the `.github/workflows/pd-actions.yaml` file accordingly.
+किसी भी प्रोजेक्ट से आउटपुट को सीधे **Slack, Discord, Telegram** पर भेजने के लिए, तदनुसार `.github/workflows/pd-actions.yaml` फ़ाइल में सूचित फ़्लैग जोड़ें/अपडेट करें।
 
 </td>
 </tr>
-</table>
+</तालिका>
 
-## PD Action workflow
+## पीडी एक्शन वर्कफ़्लो
 
 <img src="static/workflow.jpg">
 
-As described in the picture, PD action workflow takes root domain as input from `input/domains.txt` file,
+जैसा कि चित्र में बताया गया है, पीडी एक्शन वर्कफ़्लो रूट डोमेन को `इनपुट/डोमेन्स.txt` फ़ाइल से इनपुट के रूप में लेता है,
 
-1. Performs passive subdomain enumeration using [SubFinder](https://github.com/projectdiscovery/subfinder)
-2. Filter the inactive / invalid subdomains using [dnsx](https://github.com/projectdiscovery/dnsx)
-3. Performs port scan for top 100 ports using [Naabu](https://github.com/projectdiscovery/naabu)
-4. Run HTTP webserver probing on the discovered ports using [httpx](https://github.com/projectdiscovery/httpx)
-5. Run **CVEs based various nuclei templates** using [Nuclei](https://github.com/projectdiscovery/nuclei)
-6. Send alerts to **Slack,Discord,Telegram** using [Notify](https://github.com/projectdiscovery/notify) - (Optional)
-7. Create tickets for bugs found using Nuclei on **Github,Gitlab,Jira** - (Optional)
+1. [सबफाइंडर] (https://github.com/projectdiscovery/subfinder) का उपयोग करके निष्क्रिय उपडोमेन गणना करता है
+2. [dnsx](https://github.com/projectdiscovery/dnsx) का उपयोग करके निष्क्रिय/अमान्य उप डोमेन को फ़िल्टर करें
+3. [नाबू] (https://github.com/projectdiscovery/naabu) का उपयोग करके शीर्ष 100 बंदरगाहों के लिए पोर्ट स्कैन करता है
+4. [httpx](https://github.com/projectdiscovery/httpx) का उपयोग करके खोजे गए पोर्ट पर जांच करने वाला HTTP वेबसर्वर चलाएँ
+5. [Nuclei](https://github.com/projectdiscovery/nuclei) का उपयोग करके **CVEs आधारित विभिन्न न्यूक्लियर टेम्प्लेट** चलाएं
+6. [सूचना] (https://github.com/projectdiscovery/notify) का उपयोग करके **Slack, Discord, Telegram** पर अलर्ट भेजें - (वैकल्पिक)
+7. नाभिक का उपयोग करके पाए गए बग के लिए टिकट बनाएं **Github, Gitlab, Jira** - (वैकल्पिक)
 
-Results from each tool stored in the `output/` directory, upon changes after each scan you can also view the all changes using built in `git diff` UI and CLI.
+`आउटपुट/` निर्देशिका में संग्रहीत प्रत्येक उपकरण के परिणाम, प्रत्येक स्कैन के बाद परिवर्तनों पर आप बिल्ट इन `गिट डिफ` यूआई और सीएलआई का उपयोग करके सभी परिवर्तन भी देख सकते हैं।
 
-You can always tweak the flags from each project as per your need directly at `.github/workflows/pd-actions.yaml`.
+आप अपनी आवश्यकता के अनुसार प्रत्येक प्रोजेक्ट के झंडे को हमेशा `.github/workflows/pd-actions.yaml` पर सीधे ट्विक कर सकते हैं।
 
-## Custom workflow
+## कस्टम वर्कफ़्लो
 
-Checkout our blog-post https://blog.projectdiscovery.io/github-actions-for-application-security/ for a detailed breakdown of PD actions workflow and steps to write your own custom workflow using Github actions, PD actions is an idea to showcase utilization of GitHub Actions for Application security automation, you can do a lot of things with your custom workflows and tooling.
+हमारे ब्लॉग-पोस्ट https://blog.projectdiscovery.io/github-actions-for-application-security/ को चेकआउट करें पीडी क्रियाओं के वर्कफ़्लो के विस्तृत विश्लेषण के लिए और Github क्रियाओं का उपयोग करके अपने स्वयं के कस्टम वर्कफ़्लो को लिखने के चरणों के लिए, PD क्रियाएँ एक विचार है एप्लिकेशन सुरक्षा स्वचालन के लिए गिटहब क्रियाओं के उपयोग को प्रदर्शित करने के लिए, आप अपने कस्टम वर्कफ़्लो और टूलिंग के साथ बहुत सी चीजें कर सकते हैं।
 
-We have also added a few [example workflows](https://github.com/projectdiscovery/pd-actions/tree/main/workflows) to run individual projects, we will add more workflows example to cover different use cases to improve security of organization, if you got more workflows example to share with community? please don't hesitate to open a PR :smile:
+हमने अलग-अलग प्रोजेक्ट चलाने के लिए कुछ [उदाहरण वर्कफ़्लो] (https://github.com/projectdiscovery/pd-actions/tree/main/workflows) भी जोड़े हैं, हम सुरक्षा में सुधार के लिए विभिन्न उपयोग मामलों को कवर करने के लिए और अधिक वर्कफ़्लो उदाहरण जोड़ेंगे। संगठन का, यदि आपके पास समुदाय के साथ साझा करने के लिए अधिक कार्यप्रवाह उदाहरण हैं? कृपया पीआर खोलने में संकोच न करें: मुस्कान:
 
-<table>
+<तालिका>
 <tr>
-<td>
+<टीडी>
 
-### Notes:
+### टिप्पणियाँ:
 
-- Separate workflow for different organization
+- विभिन्न संगठनों के लिए अलग कार्यप्रवाह
 
-  - Helps to avoid hitting 6 hours scan time limit per scan.
-  - Managed GitHub change visualization.
+  - प्रति स्कैन 6 घंटे स्कैन समय सीमा को मारने से बचने में मदद करता है।
+  - प्रबंधित गिटहब विज़ुअलाइज़ेशन बदलें।
 
-- Different schedule time for different workflows.
-  - This will avoid running your all scans at same time.
+- विभिन्न वर्कफ़्लोज़ के लिए अलग-अलग शेड्यूल समय।
+  - यह एक ही समय में आपके सभी स्कैन चलाने से बच जाएगा।
 
 </td>
 </tr>
-</table>
+</तालिका>
 
-## Limitations
+## सीमाएं
 
-GitHub free account comes with 2000 minutes/month of free scans, making it practically free to run your continuous scans in the cloud. Few noticeable limits that are worth mentioning are listed below.
+GitHub फ्री अकाउंट 2000 मिनट/माह के फ्री स्कैन के साथ आता है, जिससे क्लाउड में आपके लगातार स्कैन को चलाना व्यावहारिक रूप से फ्री हो जाता है। कुछ ध्यान देने योग्य सीमाएँ जो ध्यान देने योग्य हैं, नीचे सूचीबद्ध हैं।
 
-<a href='https://docs.github.com/en/actions/reference/usage-limits-billing-and-administration#usage-limits'> <img src="static/limits.png" width="700px"> </a>
+<a href='https://docs.github.com/hi/actions/reference/usage-limits-billing-and-administration#usage-limits'> <img src="static/limits.png" width=" 700px"> </a>
 
-### Additional reference
+### अतिरिक्त संदर्भ
 
 - https://docs.github.com/en/github/site-policy/github-additional-product-terms#5-actions-and-packages
-- https://docs.github.com/en/actions/reference/usage-limits-billing-and-administration#usage-limits
-- https://blog.projectdiscovery.io/github-actions-for-application-security/
-- https://cdmana.com/2021/03/20210310142516432Q.html
+- https://docs.github.com/hi/actions/reference/usage-limits-billing-and-administration#usage-limits
+- https://blog.projectdiscovery.io/github-actions-for-application-s
